@@ -1,4 +1,4 @@
-object MatchingBrackets extends App{
+object MatchingBrackets extends App {
 
   val matching = Map(
     '[' -> ']',
@@ -7,10 +7,11 @@ object MatchingBrackets extends App{
     ')' -> '(',
     ']' -> '[',
     '}' -> '{',
-    )
+    'p' -> 'p'
+  )
 
-  def check(s: String): Boolean ={
-    val allowedBrackets = List('(',')','[',']','{','}')
+  def check(s: String): Boolean = {
+    val allowedBrackets = List('(', ')', '[', ']', '{', '}')
     val brackets = s.toList.filter(allowedBrackets.contains)
     clearInside(brackets)
   }
@@ -19,14 +20,24 @@ object MatchingBrackets extends App{
     case Nil => true
     case m :: Nil => false
     case _ => {
-      val updatedBrackets = brackets.foldLeft(List.empty[Char]){(result,n) =>
-        if(result.isEmpty) List(n)
-        else if(matching(result.last)== n ) result.init
-        else n +: result
+      val updatedBrackets = brackets.foldLeft(List.empty[Char]) { (result, n) =>
+          if (result.nonEmpty && matching(result.last) == n) {
+          val tmp = result.init :+ 'p'
+          tmp :+ 'p'
+        } else {
+          result :+ n
+        }
       }
-      clearInside(updatedBrackets)
+      println(updatedBrackets.filterNot(List('p').contains))
+      if (updatedBrackets == brackets) false
+      else clearInside(updatedBrackets.filterNot(List('p').contains))
     }
   }
 
-  println(check("{ { } [ ] [ [ [ ] ] ] }"))
+  val s = "{ { } [ ] [ [ [ ] ] ] }{{{"
+  val z = "{ { } [ ] [ ]} [ ] "
+  val x = "{[ ]}"
+  println(check(s))
+  println(check(z))
+  println(check(x))
 }
