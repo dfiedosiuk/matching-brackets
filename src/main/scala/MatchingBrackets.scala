@@ -1,14 +1,6 @@
-object MatchingBrackets extends App {
+import scala.annotation.tailrec
 
-  val matching = Map(
-    '[' -> ']',
-    '(' -> ')',
-    '{' -> '}',
-    ')' -> '(',
-    ']' -> '[',
-    '}' -> '{',
-    'p' -> 'p'
-  )
+object MatchingBrackets extends App {
 
   def check(s: String): Boolean = {
     val allowedBrackets = List('(', ')', '[', ']', '{', '}')
@@ -16,7 +8,18 @@ object MatchingBrackets extends App {
     clearInside(brackets)
   }
 
-  def clearInside(brackets: List[Char]): Boolean = brackets match {
+  @tailrec
+  def clearInside(brackets: List[Char]): Boolean = {
+    val matching = Map(
+      '[' -> ']',
+      '(' -> ')',
+      '{' -> '}',
+      ')' -> '(',
+      ']' -> '[',
+      '}' -> '{',
+      'p' -> 'p'
+    )
+    brackets match {
     case Nil => true
     case m :: Nil => false
     case _ => {
@@ -28,16 +31,9 @@ object MatchingBrackets extends App {
           result :+ n
         }
       }
-      println(updatedBrackets.filterNot(List('p').contains))
       if (updatedBrackets == brackets) false
       else clearInside(updatedBrackets.filterNot(List('p').contains))
     }
   }
-
-  val s = "{ { } [ ] [ [ [ ] ] ] }{{{"
-  val z = "{ { } [ ] [ ]} [ ] "
-  val x = "{[ ]}"
-  println(check(s))
-  println(check(z))
-  println(check(x))
+  }
 }
