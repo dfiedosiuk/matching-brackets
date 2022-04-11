@@ -16,24 +16,19 @@ object MatchingBrackets extends App {
       '{' -> '}',
       ')' -> '(',
       ']' -> '[',
-      '}' -> '{',
-      'p' -> 'p'
+      '}' -> '{'
     )
     brackets match {
-    case Nil => true
-    case m :: Nil => false
-    case _ => {
-      val updatedBrackets = brackets.foldLeft(List.empty[Char]) { (result, n) =>
-          if (result.nonEmpty && matching(result.last) == n) {
-          val tmp = result.init :+ 'p'
-          tmp :+ 'p'
-        } else {
-          result :+ n
+      case Nil => true
+      case m :: Nil => false
+      case _ =>
+        val updatedBrackets = brackets.foldLeft(List.empty[Char]) { (result, n) =>
+          if (result.nonEmpty && matching(result.last) == n) result.init
+          else result :+ n
         }
-      }
-      if (updatedBrackets == brackets) false
-      else clearInside(updatedBrackets.filterNot(List('p').contains))
+        if (updatedBrackets == brackets) false
+        else clearInside(updatedBrackets)
     }
   }
-  }
 }
+
